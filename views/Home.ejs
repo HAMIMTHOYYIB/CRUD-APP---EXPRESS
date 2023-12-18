@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HOME </title>
+    <style>
+        .bt{
+            border-radius:4px;
+            margin-left:20px;
+            padding:0 10px;
+            text-decoration: none;
+            font-family:sans-serif;
+            font-weight: bolder;
+        }
+        .del{
+            background-color:red;
+            color:white;
+        }
+        .del:hover{
+            background-color:white;
+            color:red;
+        }
+        .edit{
+            background-color:forestgreen;
+            color:white;
+        }
+        .edit:hover{
+            background-color:white;
+            color:forestgreen;
+        }
+    </style>
+</head>
+<body style="background-color:darkslategray;">
+    <div style="width:85%;margin: auto; margin-top:30px;background-color:white;border:4px solid white;border-radius:8px;min-height:500px;"><br>
+        <h1 style="text-align: center;background-color:darkslategray; color: white; width:99%;margin:auto;font-family:sans-serif;font-weight:600;">User Datas</h1><br>
+        <a style="text-decoration:none;margin:0 0 0 420px;color:white;" href="Form">
+        <button class="bttn" style="background-color:darkcyan; width:20%; border-radius:10px; border:3px solid white;height:50px; font-size:16px;cursor: pointer;"> 
+            <b style="color: white;">Add your Details</b>
+        </button><br><br>
+        </a>
+        <div>
+            <table style="width:100%;border:3px solid black;margin-bottom:6px; color:white;background-color:white;">
+                <thead style="border:2px solid black;background-color:darkslategray;height:35px;">
+                    <tr style="font-weight:bolder;font-family: sans-serif;">
+                        <th style="width:5%">No</th>
+                        <th style="width:20%;">Name</th>
+                        <th style="width:10%;">Age</th>
+                        <th style="width:20%;">Contact - no</th>
+                        <th style="width:25%;">e-mail</th>
+                        <th style="width:10%;">Edit</th>
+                        <th style="width:10%;">Delete</th>
+                    </tr>
+                </thead>
+                <tbody style="border:2px solid white;background-color:darkcyan;">
+                    <% tableRows.forEach((det , index) => { %>
+                        <tr>
+                            <td><%= index + 1 %></td>
+                            <td><%= det.name %></td>
+                            <td><%= det.age %></td>
+                            <td><%= det.phone %></td>
+                            <td><%= det.email %></td>
+                            <td><a class="edit bt" href="/edit/<%= index %>">Edit</a></td>
+                            <td><a class="del bt" href="/delete/<%= index %>">Delete</a></td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
