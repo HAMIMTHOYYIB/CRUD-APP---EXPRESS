@@ -104,10 +104,6 @@
         }
 
         function sendDataToNode(formdetail) {
-        
-            const index = document.getElementById('index').value;
-            formdetail.index = index;
-
 
             for (const prop in formdetail) {
         if (formdetail.hasOwnProperty(prop)) {
@@ -119,15 +115,6 @@
             document.getElementById('Form').appendChild(dataInput);
         }
     }
-
-        // Create a hidden input field to store the JSON data
-        // var dataInput = document.createElement('input');
-        // dataInput.setAttribute('type', 'hidden');
-        // dataInput.setAttribute('name', 'formdetail');
-        // dataInput.setAttribute('value', JSON.stringify(formdetail));
-        
-        // Append the hidden input field to the form
-        document.getElementById('Form').appendChild(dataInput);
 
         document.getElementById('Form').submit();
     }

@@ -136,7 +136,6 @@ app.get('/edit/:index' , (req,res) => {
 app.post('/Update/:index', (req, res) => {
 
     let index = parseInt(req.params.index);
-    console.log(index);
     const updatedFormData = req.body;
 
     fs.readFile('./datas/files.json', 'utf8', (err, data) => {
