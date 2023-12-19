@@ -3,27 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Form</title>
+    <title>editForm</title>
 </head>
 <body>
     <div style="width:90%;height:550px;background-color:skyblue; margin: auto; box-sizing: border-box; padding:100px 200px;">
-        <form id="Form" method="post" action="/submit" onsubmit="return submitForm(event)">
+        <form id="Form" method="post" action="/Update/<%= index %>" onsubmit="return submitForm(event)">
 
-
+            <input type="hidden" id="index" name="index" value="<%= formData.index %>">
             <label for="Name"><b>Name : </b></label>
-            <input style="width:300px;height:30px;border:2px solid black;font-weight:bold;" type="text" id="Name"><br>
+            <input style="width:300px;height:30px;border:2px solid black;font-weight:bold;" type="text" id="Name" value="<%= formData.name %>"><br>
             <small id="nameerror" style="color:red; margin-left:50px; font-weight: bold;"></small><br>
 
             <label for="age"><b> Age :  &nbsp;&nbsp;</b></label>
-            <input style="width:50px;height:30px;border:2px solid black;font-weight:bold;margin-top:15px;" type="number" id="age"><br>
+            <input style="width:50px;height:30px;border:2px solid black;font-weight:bold;margin-top:15px;" type="number" id="age" value="<%= formData.age %>"><br>
             <small id="ageerror" style="color:red; margin-left:50px; font-weight: bold;"></small><br>
 
             <label  for="phone"><b>phone : </b></label>
-            <input style="width:200px;height:30px;border:2px solid black; margin-top:15px;font-weight:bold;" type="number" id="phone"><br>
+            <input style="width:200px;height:30px;border:2px solid black; margin-top:15px;font-weight:bold;" type="number" id="phone" value="<%= formData.phone %>"><br>
             <small id="phoneerror" style="color:red; margin-left:50px; font-weight: bold;"></small><br>
             
             <label  for="email"><b>email :  </b></label>
-            <input style="width:200px;height:30px;border:2px solid black; margin-top:20px;font-weight:bold;" type="email" id="email"><br>
+            <input style="width:200px;height:30px;border:2px solid black; margin-top:20px;font-weight:bold;" type="email" id="email" value="<%= formData.email %>"><br>
             <small id="mailerror" style="color:red; margin-left:50px; font-weight: bold;"></small><br>
             
             <input style="width:200px;border-radius:2px;border:2px solid black; margin:50px 50px;height:30px;" type="reset">
@@ -32,7 +32,6 @@
     </div>
 
     <script>
-        
 
          function validateForm() {
 
@@ -63,29 +62,26 @@
             let emailRegex = /^\S+@\S+\.\S+$/;
             let validmail = emailRegex.test(email);
 
-        if (!validName) {
+            if (!validName) {
                 nameerr.innerHTML = "Invalid Name Format";
-
+                return false;
             }
             if (!validAge) {
                 ageerr.innerHTML = "Age is invalid";
-
+                return false;
             }
-            if (!validPhone) {
+            if (!validPhone ) {
                 phoneerr.innerHTML = "Phone number must be 10 digits";
-
+                return false;
             }
             if (!validmail) {
                 mailerr.innerHTML = "Invalid Mail format";
-
-            }
-            if (!validName || !validAge || !validPhone|| !validmail) {
                 return false;
-            }else{
-                return true;
             }
+            return true;
         }
-
+        
+        
         function submitForm(event) {
             event.preventDefault();
             if (validateForm()) {
@@ -93,6 +89,7 @@
                 const age = document.getElementById('age').value;
                 const phone = document.getElementById('phone').value;
                 const email = document.getElementById('email').value;
+
 
                 const formDetail = {
                     name: name,
@@ -107,12 +104,27 @@
         }
 
         function sendDataToNode(formdetail) {
+        
+            const index = document.getElementById('index').value;
+            formdetail.index = index;
+
+
+            for (const prop in formdetail) {
+        if (formdetail.hasOwnProperty(prop)) {
+            var dataInput = document.createElement('input');
+            dataInput.setAttribute('type', 'hidden');
+            dataInput.setAttribute('name', prop); // Set the name as the property name
+            dataInput.setAttribute('value', formdetail[prop]); // Set the value as the property value
+
+            document.getElementById('Form').appendChild(dataInput);
+        }
+    }
 
         // Create a hidden input field to store the JSON data
-        var dataInput = document.createElement('input');
-        dataInput.setAttribute('type', 'hidden');
-        dataInput.setAttribute('name', 'formdetail');
-        dataInput.setAttribute('value', JSON.stringify(formdetail));
+        // var dataInput = document.createElement('input');
+        // dataInput.setAttribute('type', 'hidden');
+        // dataInput.setAttribute('name', 'formdetail');
+        // dataInput.setAttribute('value', JSON.stringify(formdetail));
         
         // Append the hidden input field to the form
         document.getElementById('Form').appendChild(dataInput);
