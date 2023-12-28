@@ -25,6 +25,12 @@
             background-color:forestgreen;
             color:white;
         }
+        .bttn{
+            background-color:darkcyan;
+        }
+        .bttn:hover{
+            background-color:darkslategray;
+        }
         .edit:hover{
             background-color:white;
             color:forestgreen;
@@ -35,7 +41,7 @@
     <div style="width:85%;margin: auto; margin-top:30px;background-color:white;border:4px solid white;border-radius:8px;min-height:500px;"><br>
         <h1 style="text-align: center;background-color:darkslategray; color: white; width:99%;margin:auto;font-family:sans-serif;font-weight:600;">User Datas</h1><br>
         <a style="text-decoration:none;margin:0 0 0 420px;color:white;" href="Form">
-        <button class="bttn" style="background-color:darkcyan; width:20%; border-radius:10px; border:3px solid white;height:50px; font-size:16px;cursor: pointer;"> 
+        <button class="bttn" style="width:20%; border-radius:10px; border:3px solid white;height:50px; font-size:16px;cursor: pointer;"> 
             <b style="color: white;">Add your Details</b>
         </button><br><br>
         </a>
@@ -54,7 +60,7 @@
                 </thead>
                 <tbody style="border:2px solid white;background-color:darkcyan;">
                     <% tableRows.forEach((det , index) => { %>
-                        <tr>
+                        <tr style="font-weight:600;font-family:Arial, Helvetica, sans-serif;">
                             <td><%= index + 1 %></td>
                             <td><%= det.name %></td>
                             <td><%= det.age %></td>

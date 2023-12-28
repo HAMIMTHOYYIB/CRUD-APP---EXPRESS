@@ -10,6 +10,7 @@
         <form id="Form" method="post" action="/Update/<%= index %>" onsubmit="return submitForm(event)">
 
             <input type="hidden" id="index" name="index" value="<%= formData.index %>">
+            
             <label for="Name"><b>Name : </b></label>
             <input style="width:300px;height:30px;border:2px solid black;font-weight:bold;" type="text" id="Name" value="<%= formData.name %>"><br>
             <small id="nameerror" style="color:red; margin-left:50px; font-weight: bold;"></small><br>

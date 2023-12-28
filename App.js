@@ -6,13 +6,11 @@ const bodyparser = require('body-parser');
 const app = express();
 
 app.set('view engine','ejs')
-app.use(bodyparser.urlencoded({ extended : true }))
+app.use(bodyparser.urlencoded({ extended : true })) //here extended true is for parsing objects and arrays in urlencoded format.
 
 // Homepage
 app.get('/', (req, res) => {
-
     fs.readFile('./datas/files.json', 'utf8', (err, data) => {
-
         if (err) {
             console.error(err);
             res.status(500).send('Error on reading json files');
@@ -35,12 +33,10 @@ app.get('/', (req, res) => {
     });
 }); 
 
-
 // Form page
 app.get('/form' , (req,res) => {
     res.render('Form')
 })
-
 
 // On submit the data will be added to json and home page is updated
 app.post('/submit', (req, res) => {  
@@ -59,10 +55,10 @@ app.post('/submit', (req, res) => {
     
             // Add new form data to the existing JSON
             jsonData.push(formData);
-            const formattedData = jsonData.map(item => {
-                return JSON.parse(item.formdetail);
+            // Here in json object the data is in another object called formdetail.
+            const formattedData = jsonData.map(value => {
+                return JSON.parse(value.formdetail);
             });
-    
             // Write updated JSON data back to the file
             fs.writeFile('./datas/files.json', JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
                 if (err) {
@@ -81,54 +77,65 @@ app.post('/submit', (req, res) => {
 
 // On delete the details in the specified row need to be deleted from json and show the rest
 app.get('/delete/:index' , (req , res) => {
+    let index = req.params.index  // to get the index from the URL.
 
-    let index = req.params.index  // to get the index from the parameter.
     fs.readFile('./datas/files.json' , 'utf-8' , (err , data) => {
         if (err) {
             console.log(err)
             res.status(500).send('Error on reading datas from json')
             return; // if error goes out from reading
         }
-        let jsondata = JSON.parse(data);
-        console.log("Data deleted : ",jsondata[index]);
-        if (index >= 0 && index < jsondata.length) { // If the index is true at the boundries delete and update json
-            jsondata.splice(index,1)
+        try {
+            let jsondata = JSON.parse(data);
+            console.log("Data deleted : ",jsondata[index]);
+            if (index >= 0 && index < jsondata.length) { // If the index is true at the boundries delete and update json
+                jsondata.splice(index,1)
 
-            fs.writeFile('./datas/files.json' , JSON.stringify(jsondata , null , 2) , 'utf-8',(err) => {
-                if(err) {
-                   console.log(err);
-                   res.status(500).send('Error on updating json') 
-                }
-                res.redirect('/')
-            })
-        }else{
-        res.status(500).send('Error on deleting data');
+                fs.writeFile('./datas/files.json' , JSON.stringify(jsondata , null , 2) , 'utf-8',(err) => {
+                    if(err) {
+                    console.log(err);
+                    res.status(500).send('Error on updating json') 
+                    }
+                    res.redirect('/')
+                })
+            }else{
+            res.status(500).send('Error on deleting data');
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).send('Cant parse json data');
         }
+        
     })
 })
 
-
 // On the Edit it shows a form with prefilled details of the the user.
 app.get('/edit/:index' , (req,res) => {
+    let index = parseInt(req.params.index) //Index taken from URL to get the specific row
 
-    let index = parseInt(req.params.index)
     fs.readFile('./datas/files.json' , 'utf8' , (err,data) => {
         if(err){
             console.log(err)
             res.status(500).send('Cannot read jsondata on edit');
             return;
         }
-        const jsonData = JSON.parse(data);
-        if (index >= 0 && index < jsonData.length) {
-            // Get the specific entry to be edited
-            const Editdet = jsonData[index];
-            const formData = JSON.parse(Editdet.formdetail);
+        try {
+            const jsonData = JSON.parse(data);
+            if (index >= 0 && index < jsonData.length) {
+                // Get the specific details to edit.
+                const Editdet = jsonData[index];
+                const formData = JSON.parse(Editdet.formdetail);
 
-            // Render the form with prefilled data for editing
-            res.render('Editform', { formData, index: req.params.index });
-        } else {
-            res.status(404).send('Data not found for editing');
+                // Render the form with prefilled data for editing
+                res.render('Editform', { formData, index: req.params.index});
+            } else {
+                res.status(404).send('Data not found for editing');
+            }
+        } catch (error) {
+           console.log(error);
+           res.status(404).send('Cant get userdetails for edit.') 
         }
+        
     })
 })
 
@@ -144,24 +151,29 @@ app.post('/Update/:index', (req, res) => {
             console.error(err);
             return res.status(500).send('Internal Server Error');
         }
+        try {
+            let jsonData = JSON.parse(data);
+            // Check if it is a valid index or not.
+            if (index >= 0 && index < jsonData.length) {
+                jsonData[index].formdetail = JSON.stringify(updatedFormData); //Changes the details by index of the object in json.
 
-        let jsonData = JSON.parse(data);
-
-        if (index >= 0 && index < jsonData.length) {
-            jsonData[index].formdetail = JSON.stringify(updatedFormData);
-
-            fs.writeFile('./datas/files.json', JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
-                if (err) {
-                    console.error(err);
-                    return res.status(500).send('Error on updating JSON');
-                }
-                res.redirect('/'); // Redirect to the homepage after  updating
-            });
-        } else {
-            res.status(404).send('Data not found for updating');
+                fs.writeFile('./datas/files.json', JSON.stringify(jsonData, null, 2), 'utf8', (err) => {
+                    if (err) {
+                        console.error(err);
+                        return res.status(500).send('Error on updating JSON');
+                    }
+                    res.redirect('/'); // Redirect to the homepage after updating
+                });
+            } else {
+                res.status(404).send('Data not found for updating');
+            }
+        } catch (error) {
+            console.log(error);
+            res.status(500).send('Cant parse json data for on updating')
         }
+        
     });
 });
 
-const port = 8000;
+const port = 8001;
 app.listen(port , () => console.log(`Server has started on http://localhost:${port}`));
